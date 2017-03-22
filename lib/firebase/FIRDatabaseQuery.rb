@@ -1,4 +1,4 @@
-class FQuery
+class FIRDatabaseQuery
 
   # previously the 'key' method was called 'name'
   def name
@@ -10,7 +10,7 @@ class FQuery
     raise "event handler is required" unless and_then
     raise "event handler must accept one or two arguments" unless and_then.arity == 1 || and_then.arity == 2
 
-    event_type = Firebase.convert_event_type(event_type)
+    event_type = FIRDatabaseReference.convert_event_type(event_type)
     disconnect_block = options[:disconnect]
     raise ":disconnect handler must not accept any arguments" if disconnect_block && disconnect_block.arity > 0
 
@@ -34,7 +34,7 @@ class FQuery
     raise "event handler is required" unless and_then
     raise "event handler must accept one or two arguments" unless and_then.arity == 1 || and_then.arity == 2
 
-    event_type = Firebase.convert_event_type(event_type)
+    event_type = FIRDatabaseReference.convert_event_type(event_type)
     disconnect_block = options[:disconnect]
     raise ":disconnect handler must not accept any arguments" if disconnect_block && disconnect_block.arity > 0
 
@@ -132,8 +132,8 @@ class FQuery
     end
 
     if block
-      event_type = options.fetch(:once, options.fetch(:on, FEventTypeValue))
-      event_type = Firebase.convert_event_type(event_type)
+      event_type = options.fetch(:once, options.fetch(:on, FIRDataEventTypeValue))
+      event_type = FIRDatabaseReference.convert_event_type(event_type)
 
       if options.key?(:once)
         return fb_query.observeSingleEventOfType(event_type, withBlock: block)

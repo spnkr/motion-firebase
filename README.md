@@ -1,3 +1,6 @@
+support for the v3.12.0 firebase sdk. todo: check ios sample app, remove old login stuff.
+
+
 motion-firebase
 --------
 

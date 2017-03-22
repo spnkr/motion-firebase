@@ -1,4 +1,6 @@
-class Firebase
+
+
+class FIRDatabaseReference
   ERRORS = {
     -9999 => :email_in_use,
     -2 => :wrong_password,
@@ -6,16 +8,16 @@ class Firebase
 
   def self.convert_event_type(event_type)
     case event_type
-    when :child_added, :added, FEventTypeChildAdded
-      return FEventTypeChildAdded
-    when :child_moved, :moved, FEventTypeChildMoved
-      return FEventTypeChildMoved
-    when :child_changed, :changed, FEventTypeChildChanged
-      return FEventTypeChildChanged
-    when :child_removed, :removed, FEventTypeChildRemoved
-      return FEventTypeChildRemoved
-    when :value, FEventTypeValue
-      return FEventTypeValue
+    when :child_added, :added, FIRDataEventTypeChildAdded
+      return FIRDataEventTypeChildAdded
+    when :child_moved, :moved, FIRDataEventTypeChildMoved
+      return FIRDataEventTypeChildMoved
+    when :child_changed, :changed, FIRDataEventTypeChildChanged
+      return FIRDataEventTypeChildChanged
+    when :child_removed, :removed, FIRDataEventTypeChildRemoved
+      return FIRDataEventTypeChildRemoved
+    when :value, FIRDataEventTypeValue
+      return FIRDataEventTypeValue
     else
       NSLog("Unknown event type #{event_type.inspect}")
     end
@@ -33,7 +35,7 @@ class Firebase
       url = "https://#{url}"
     end
 
-    # should we support `Firebase.url = 'myapp/path/to/child/'` ?  I'm gonna say
+    # should we support `FIRDatabaseReference.url = 'myapp/path/to/child/'` ?  I'm gonna say
     # NO for now...
     unless url.include?('.firebaseio.com/') || url.include?('.firebaseio-demo.com/')
       after_scheme = url.index('//') + 2
@@ -50,6 +52,7 @@ class Firebase
     @url
   end
 
+  
   def self.new(url=nil)
     if url.nil?
       @shared ||= alloc.initWithUrl(@url)
@@ -61,8 +64,8 @@ class Firebase
   end
 
   # @example
-  #     Firebase.dispatch_queue(queue)
-  #     # => Firebase.setDispatchQueue(queue)
+  #     FIRDatabaseReference.dispatch_queue(queue)
+  #     # => FIRDatabaseReference.setDispatchQueue(queue)
   def self.dispatch_queue=(queue)
     if queue.is_a?(Dispatch::Queue)
       queue = queue.dispatch_object
@@ -75,7 +78,7 @@ class Firebase
   end
 
   def self.connected?(&block)
-    Firebase.new.connected?(&block)
+    FIRDatabaseReference.new.connected?(&block)
   end
   def connected?(&block)
     if block
@@ -88,19 +91,19 @@ class Firebase
   end
 
   def self.offline!
-    Firebase.goOffline
+    FIRDatabaseReference.goOffline
   end
 
   def offline!
-    Firebase.goOffline
+    FIRDatabaseReference.goOffline
   end
 
   def self.online!
-    Firebase.goOnline
+    FIRDatabaseReference.goOnline
   end
 
   def online!
-    Firebase.goOnline
+    FIRDatabaseReference.goOnline
   end
 
   def transaction(options={}, &transaction)
@@ -123,7 +126,7 @@ class Firebase
   end
 
   # @example
-  #     firebase = Firebase.new('http://..../')
+  #     firebase = FIRDatabaseReference.new('http://..../')
   #     firebase[]  # => childByAutoId
   #     firebase['fred']  # => childByAppendingPath('fred')
   #     firebase['fred', 'name', 'first']  # => childByAppendingPath('fred/name/first')
